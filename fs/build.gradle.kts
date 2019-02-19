@@ -86,13 +86,13 @@ tasks.register<Jar>("javadocJar") {
 publishing {
   publications {
     create<MavenPublication>("mavenJava") {
-      artifactId = "knotx-repository-connector-http"
+      artifactId = "knotx-repository-connector-fs"
       from(components["java"])
       artifact(tasks["sourcesJar"])
       artifact(tasks["javadocJar"])
       pom {
-        name.set("Knot.x Core Repository Connector HTTP")
-        description.set("Repository Connector HTTP - enables fetching templates from HTTP based repositories")
+        name.set("Knot.x Core Filesystem Repository")
+        description.set("Repository Filesystem Repository - enables fetching templates from local directories")
         url.set("http://knotx.io")
         licenses {
           license {
