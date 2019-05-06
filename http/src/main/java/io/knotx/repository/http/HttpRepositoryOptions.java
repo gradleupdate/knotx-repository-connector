@@ -15,7 +15,6 @@
  */
 package io.knotx.repository.http;
 
-import io.knotx.server.api.header.CustomHttpHeader;
 import io.vertx.codegen.annotations.DataObject;
 import io.vertx.codegen.annotations.GenIgnore;
 import io.vertx.core.json.JsonObject;
@@ -38,7 +37,7 @@ public class HttpRepositoryOptions {
   private Set<String> allowedRequestHeaders;
   private List<Pattern> allowedRequestHeaderPatterns;
 
-  private CustomHttpHeader customHttpHeader;
+  private CustomHttpHeaderOptions customHttpHeader;
 
   /**
    * Default constructor
@@ -57,7 +56,7 @@ public class HttpRepositoryOptions {
     this.clientDestination = null;
     this.allowedRequestHeaders = new HashSet<>(other.allowedRequestHeaders);
     this.allowedRequestHeaderPatterns = new ArrayList<>(other.allowedRequestHeaderPatterns);
-    this.customHttpHeader = new CustomHttpHeader(other.customHttpHeader);
+    this.customHttpHeader = new CustomHttpHeaderOptions(other.customHttpHeader);
   }
 
   /**
@@ -70,7 +69,8 @@ public class HttpRepositoryOptions {
     HttpRepositoryOptionsConverter.fromJson(json, this);
     if (allowedRequestHeaders != null) {
       allowedRequestHeaderPatterns = allowedRequestHeaders.stream()
-          .map(expr -> Pattern.compile(expr, Pattern.CASE_INSENSITIVE)).collect(Collectors.toList());
+          .map(expr -> Pattern.compile(expr, Pattern.CASE_INSENSITIVE))
+          .collect(Collectors.toList());
     }
   }
 
@@ -100,8 +100,8 @@ public class HttpRepositoryOptions {
   }
 
   /**
-   * Set the {@link WebClientOptions} used by the HTTP client
-   * to communicate with remote http repository
+   * Set the {@link WebClientOptions} used by the HTTP client to communicate with remote http
+   * repository
    *
    * @param clientOptions {@link WebClientOptions} object
    * @return a reference to this, so the API can be used fluently
@@ -137,8 +137,8 @@ public class HttpRepositoryOptions {
   }
 
   /**
-   * Set the collection of patterns of allowed request headers. Only headers matching any
-   * of the pattern from the set will be sent to the HTTP repository
+   * Set the collection of patterns of allowed request headers. Only headers matching any of the
+   * pattern from the set will be sent to the HTTP repository
    *
    * @param allowedRequestHeaders a Set of patterns of allowed request headers
    * @return a reference to this, so the API can be used fluently
@@ -151,7 +151,7 @@ public class HttpRepositoryOptions {
   /**
    * @return a Custom Header to be sent in every request to the remote repository
    */
-  public CustomHttpHeader getCustomHttpHeader() {
+  public CustomHttpHeaderOptions getCustomHttpHeader() {
     return customHttpHeader;
   }
 
@@ -161,7 +161,7 @@ public class HttpRepositoryOptions {
    * @param customHttpHeader the header name and value
    * @return a reference to this, so the API can be used fluently
    */
-  public HttpRepositoryOptions setCustomHttpHeader(CustomHttpHeader customHttpHeader) {
+  public HttpRepositoryOptions setCustomHttpHeader(CustomHttpHeaderOptions customHttpHeader) {
     this.customHttpHeader = customHttpHeader;
     return this;
   }
