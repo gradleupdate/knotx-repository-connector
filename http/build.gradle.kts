@@ -33,6 +33,7 @@ group = "io.knotx"
 apply(from = "../gradle/common.deps.gradle.kts")
 apply(from = "../gradle/codegen.deps.gradle.kts")
 dependencies {
+  implementation("io.knotx:knotx-commons")
   api("io.knotx:knotx-fragment-api")
   api("io.knotx:knotx-server-http-api")
   api(group = "com.google.guava", name = "guava")

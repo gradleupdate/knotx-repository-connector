@@ -16,12 +16,12 @@
 
 subprojects {
 
-   repositories {
-     mavenLocal()
-     maven { url = uri("https://plugins.gradle.org/m2/") }
-     maven { url = uri("http://repo1.maven.org/maven2") }
-     maven { url = uri("https://oss.sonatype.org/content/groups/staging/") }
-     maven { url = uri("https://oss.sonatype.org/content/repositories/snapshots") }
-   }
+    repositories {
+        jcenter()
+        mavenLocal()
+        maven { url = uri("https://plugins.gradle.org/m2/") }
+        maven { url = uri("https://oss.sonatype.org/content/groups/staging/") }
+        maven { url = uri("https://oss.sonatype.org/content/repositories/snapshots") }
+    }
 
- }
+}
