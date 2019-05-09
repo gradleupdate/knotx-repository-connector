@@ -42,6 +42,10 @@ dependencies {
   implementation(group = "commons-io", name = "commons-io")
   implementation(group = "org.apache.commons", name = "commons-lang3")
   implementation(group = "org.apache.commons", name = "commons-collections4")
+
+  testImplementation(group = "org.mockito", name = "mockito-core")
+  testImplementation(group = "org.mockito", name = "mockito-junit-jupiter")
+  testImplementation(group = "com.github.tomakehurst", name = "wiremock")
 }
 
 // -----------------------------------------------------------------------------
