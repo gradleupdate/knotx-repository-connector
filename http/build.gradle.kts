@@ -36,11 +36,12 @@ dependencies {
   implementation("io.knotx:knotx-commons")
   api("io.knotx:knotx-fragment-api")
   api("io.knotx:knotx-server-http-api")
-  api(group = "com.google.guava", name = "guava")
-  api(group = "commons-io", name = "commons-io")
-  api(group = "org.apache.commons", name = "commons-lang3")
-  api(group = "com.typesafe", name = "config")
-  api(group = "commons-collections", name = "commons-collections")
+
+  implementation(group = "io.vertx", name = "vertx-web-client")
+  implementation(group = "com.google.guava", name = "guava")
+  implementation(group = "commons-io", name = "commons-io")
+  implementation(group = "org.apache.commons", name = "commons-lang3")
+  implementation(group = "org.apache.commons", name = "commons-collections4")
 }
 
 // -----------------------------------------------------------------------------
