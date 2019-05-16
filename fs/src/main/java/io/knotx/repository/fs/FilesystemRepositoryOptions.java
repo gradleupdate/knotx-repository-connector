@@ -20,7 +20,7 @@ import io.vertx.core.json.JsonObject;
 import org.apache.commons.lang3.StringUtils;
 
 /**
- * Describes a file system repository configuration
+ * Filesystem repository connector configuration
  */
 @DataObject(generateConverter = true, publicConverter = false)
 public class FilesystemRepositoryOptions {
@@ -32,38 +32,19 @@ public class FilesystemRepositoryOptions {
 
   private String catalogue;
 
-  /**
-   * Default constructor
-   */
   public FilesystemRepositoryOptions() {
     init();
   }
 
-
-  /**
-   * Copy constructor
-   *
-   * @param other the instance to copy
-   */
   public FilesystemRepositoryOptions(FilesystemRepositoryOptions other) {
     this.catalogue = other.catalogue;
   }
 
-  /**
-   * Create an settings from JSON
-   *
-   * @param json the JSON
-   */
   public FilesystemRepositoryOptions(JsonObject json) {
     init();
     FilesystemRepositoryOptionsConverter.fromJson(json, this);
   }
 
-  /**
-   * Convert to JSON
-   *
-   * @return the JSON
-   */
   public JsonObject toJson() {
     JsonObject json = new JsonObject();
     FilesystemRepositoryOptionsConverter.toJson(this, json);
@@ -82,8 +63,8 @@ public class FilesystemRepositoryOptions {
   }
 
   /**
-   * Set the root folder of the repository on file system.
-   * If catalogue equals empty string a verticle will look for the files in classpath
+   * Set the root folder of the repository on filesystem.
+   * If {@code catalogue} is an empty string, a connector will look for the files in the classpath.
    *
    * @param catalogue a root path to the repository files
    * @return a reference to this, so the API can be used fluently

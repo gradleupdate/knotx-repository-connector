@@ -27,7 +27,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
- * Describes a configuration of Http Repository connector
+ * HTTP Repository connector configuration
  */
 @DataObject(generateConverter = true, publicConverter = false)
 public class HttpRepositoryOptions {
@@ -39,18 +39,10 @@ public class HttpRepositoryOptions {
 
   private CustomHttpHeaderOptions customHttpHeader;
 
-  /**
-   * Default constructor
-   */
   public HttpRepositoryOptions() {
     init();
   }
 
-  /**
-   * Copy constructor
-   *
-   * @param other the instance to copy
-   */
   public HttpRepositoryOptions(HttpRepositoryOptions other) {
     this.clientOptions = new WebClientOptions(other.clientOptions);
     this.clientDestination = null;
@@ -59,11 +51,6 @@ public class HttpRepositoryOptions {
     this.customHttpHeader = new CustomHttpHeaderOptions(other.customHttpHeader);
   }
 
-  /**
-   * Create an settings from JSON
-   *
-   * @param json the JSON
-   */
   public HttpRepositoryOptions(JsonObject json) {
     init();
     HttpRepositoryOptionsConverter.fromJson(json, this);
@@ -74,11 +61,6 @@ public class HttpRepositoryOptions {
     }
   }
 
-  /**
-   * Convert to JSON
-   *
-   * @return the JSON
-   */
   public JsonObject toJson() {
     JsonObject json = new JsonObject();
     HttpRepositoryOptionsConverter.toJson(this, json);
@@ -100,8 +82,9 @@ public class HttpRepositoryOptions {
   }
 
   /**
-   * Set the {@link WebClientOptions} used by the HTTP client to communicate with remote http
-   * repository
+   * Set the {@code WebClientOptions} used by the HTTP client to communicate with remote http
+   * repository. See https://vertx.io/docs/vertx-web-client/dataobjects.html#WebClientOptions for
+   * the details what can be configured.
    *
    * @param clientOptions {@link WebClientOptions} object
    * @return a reference to this, so the API can be used fluently
@@ -119,7 +102,7 @@ public class HttpRepositoryOptions {
   }
 
   /**
-   * Set the remote location of the repository
+   * Set the remote location of the repository.
    *
    * @param clientDestination a {@link ClientDestination} object
    * @return a reference to this, so the API can be used fluently
@@ -138,7 +121,8 @@ public class HttpRepositoryOptions {
 
   /**
    * Set the collection of patterns of allowed request headers. Only headers matching any of the
-   * pattern from the set will be sent to the HTTP repository
+   * pattern from the set will be sent to the HTTP repository. Each item is a string that defines
+   * regex, e.g. to match any char use {@code .*}.
    *
    * @param allowedRequestHeaders a Set of patterns of allowed request headers
    * @return a reference to this, so the API can be used fluently
@@ -156,7 +140,7 @@ public class HttpRepositoryOptions {
   }
 
   /**
-   * Set the header (name and value) to be sent in every request to the remote repository
+   * Set the header (name and value) to be sent in every request to the remote repository.
    *
    * @param customHttpHeader the header name and value
    * @return a reference to this, so the API can be used fluently

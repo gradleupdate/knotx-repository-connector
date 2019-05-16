@@ -19,7 +19,7 @@ import io.vertx.codegen.annotations.DataObject;
 import io.vertx.core.json.JsonObject;
 
 /**
- * Describes a custom header that is send with every HTTP response from the server
+ * Describes a custom header that is send with every HTTP Repository request.
  */
 @DataObject(generateConverter = true)
 public class CustomHttpHeaderOptions {
@@ -27,43 +27,24 @@ public class CustomHttpHeaderOptions {
   private String name;
   private String value;
 
-  /**
-   * Default Constructor
-   */
   public CustomHttpHeaderOptions() {
     //Nothing to do
   }
 
-  /**
-   * Default copy constructor
-   *
-   * @param other the customHeader configuration to copy
-   */
   public CustomHttpHeaderOptions(CustomHttpHeaderOptions other) {
     this.name = other.name;
     this.value = other.value;
   }
 
-  /**
-   * Creates from JSON
-   *
-   * @param json the JSON
-   */
   public CustomHttpHeaderOptions(JsonObject json) {
     CustomHttpHeaderOptionsConverter.fromJson(json, this);
   }
 
-  /**
-   * Convert to JSON
-   *
-   * @return the JSON
-   */
   public JsonObject toJson() {
     JsonObject json = new JsonObject();
     CustomHttpHeaderOptionsConverter.toJson(this, json);
     return json;
   }
-
 
   /**
    * Name of the request header.
@@ -86,7 +67,6 @@ public class CustomHttpHeaderOptions {
     this.value = value;
     return this;
   }
-
 
   /**
    * @return a request header name
