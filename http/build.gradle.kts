@@ -34,10 +34,10 @@ group = "io.knotx"
 apply(from = "../gradle/common.deps.gradle.kts")
 apply(from = "../gradle/codegen.deps.gradle.kts")
 dependencies {
-  implementation("io.knotx:knotx-commons")
-  api("io.knotx:knotx-fragment-api")
-  api("io.knotx:knotx-server-http-api")
+  api("io.knotx:knotx-fragment-api:${project.version}")
+  api("io.knotx:knotx-server-http-api:${project.version}")
 
+  implementation("io.knotx:knotx-commons:${project.version}")
   implementation(group = "io.vertx", name = "vertx-web-client")
   implementation(group = "com.google.guava", name = "guava")
   implementation(group = "commons-io", name = "commons-io")
@@ -65,7 +65,7 @@ sourceSets.named("main") {
 
 tasks {
   named<RatTask>("rat") {
-    excludes.addAll("**/*.json", "**/*.md", "**/*.templ", "**/*.adoc", "**/build/*", "**/out/*", "**/generated/*", "/src/test/resources/*", "*.iml")
+    excludes.addAll("**/*.json", "*.md", "**/*.templ", "**/*.adoc", "**/build/*", "**/out/*", "**/generated/*", "/src/test/resources/*", "*.iml")
   }
   getByName("build").dependsOn("rat")
 

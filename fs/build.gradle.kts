@@ -21,7 +21,6 @@ plugins {
   id("java-library")
   id("maven-publish")
   id("signing")
-  id("jacoco")
   id("org.nosphere.apache.rat") version "0.4.0"
 }
 
@@ -34,9 +33,9 @@ group = "io.knotx"
 apply(from = "../gradle/common.deps.gradle.kts")
 apply(from = "../gradle/codegen.deps.gradle.kts")
 dependencies {
-  api("io.knotx:knotx-fragment-api")
-  api("io.knotx:knotx-server-http-api")
-
+  api("io.knotx:knotx-fragment-api:${project.version}")
+  api("io.knotx:knotx-server-http-api:${project.version}")
+  
   implementation(group = "com.google.guava", name = "guava")
   implementation(group = "commons-io", name = "commons-io")
   implementation(group = "org.apache.commons", name = "commons-lang3")
@@ -62,7 +61,7 @@ sourceSets.named("main") {
 
 tasks {
   named<RatTask>("rat") {
-    excludes.addAll("**/*.json", "**/*.md", "**/*.templ", "**/*.adoc", "**/build/*", "**/out/*", "**/generated/*", "/src/test/resources/*", "*.iml")
+    excludes.addAll("**/*.json", "*.md", "**/*.templ", "**/*.adoc", "**/build/*", "**/out/*", "**/generated/*", "/src/test/resources/*", "*.iml")
   }
   getByName("build").dependsOn("rat")
 
