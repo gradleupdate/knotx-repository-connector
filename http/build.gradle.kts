@@ -32,7 +32,6 @@ plugins {
 apply(from = "../gradle/common.deps.gradle.kts")
 apply(from = "../gradle/codegen.deps.gradle.kts")
 dependencies {
-  api("io.knotx:knotx-fragment-api:${project.version}")
   api("io.knotx:knotx-server-http-api:${project.version}")
 
   implementation("io.knotx:knotx-commons:${project.version}")
