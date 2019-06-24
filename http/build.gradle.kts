@@ -26,12 +26,15 @@ plugins {
   id("org.nosphere.apache.rat") version "0.4.0"
 }
 
-apply(from = "../gradle/common.deps.gradle.kts")
-
 dependencies {
+  implementation(platform("io.knotx:knotx-dependencies:${project.version}"))
   api("io.knotx:knotx-server-http-api:${project.version}")
 
   implementation("io.knotx:knotx-commons:${project.version}")
+
+  implementation(group = "io.vertx", name = "vertx-core")
+  implementation(group = "io.vertx", name = "vertx-service-proxy")
+  implementation(group = "io.vertx", name = "vertx-rx-java2")
   implementation(group = "io.vertx", name = "vertx-web-client")
   implementation(group = "com.google.guava", name = "guava")
   implementation(group = "commons-io", name = "commons-io")
