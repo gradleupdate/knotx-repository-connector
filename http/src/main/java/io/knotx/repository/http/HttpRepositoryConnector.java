@@ -15,12 +15,19 @@
  */
 package io.knotx.repository.http;
 
-import io.knotx.server.api.context.ClientRequest;
-import io.knotx.server.api.context.RequestEvent;
-import io.knotx.server.api.handler.RequestEventHandlerResult;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.nio.charset.UnsupportedCharsetException;
+import java.util.stream.Collectors;
+
+import org.apache.commons.lang3.StringUtils;
+
 import io.knotx.commons.http.request.AllowedHeadersFilter;
 import io.knotx.commons.http.request.DataObjectsUtil;
 import io.knotx.commons.http.request.MultiMapCollector;
+import io.knotx.server.api.context.ClientRequest;
+import io.knotx.server.api.context.RequestEvent;
+import io.knotx.server.api.handler.RequestEventHandlerResult;
 import io.netty.handler.codec.http.HttpHeaderNames;
 import io.netty.handler.codec.http.HttpStatusClass;
 import io.reactivex.Single;
@@ -34,11 +41,6 @@ import io.vertx.reactivex.core.buffer.Buffer;
 import io.vertx.reactivex.ext.web.client.HttpRequest;
 import io.vertx.reactivex.ext.web.client.HttpResponse;
 import io.vertx.reactivex.ext.web.client.WebClient;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.nio.charset.UnsupportedCharsetException;
-import java.util.stream.Collectors;
-import org.apache.commons.lang3.StringUtils;
 
 class HttpRepositoryConnector {
 
@@ -58,7 +60,8 @@ class HttpRepositoryConnector {
 
   Single<RequestEventHandlerResult> process(RequestEvent requestEvent) {
     ClientRequest request = requestEvent.getClientRequest();
-    MultiMap requestHeaders = buildHeaders(configuration.getClientDestination().getHostHeader(),
+    MultiMap requestHeaders = buildHeaders(configuration.getClientDestination()
+            .getHostHeader(),
         request.getHeaders());
 
     RequestOptions httpRequestData = buildRequestData(request);
@@ -148,10 +151,8 @@ class HttpRepositoryConnector {
       RequestOptions httpRequestData,
       MultiMap requestHeaders) {
     HttpRequest<Buffer> request = webClient.request(HttpMethod.GET, httpRequestData);
-    request.headers().addAll(requestHeaders);
-    if (requestHeaders.get(HttpHeaderNames.HOST.toString()) != null) {
-      request.host(requestHeaders.get(HttpHeaderNames.HOST.toString()));
-    }
+    request.headers()
+        .addAll(requestHeaders);
     return request.rxSend();
   }
 
@@ -166,18 +167,24 @@ class HttpRepositoryConnector {
 
   private RequestOptions buildRequestData(ClientRequest request) {
     return new RequestOptions()
-        .setSsl(configuration.getClientDestination().getScheme().equals("https"))
+        .setSsl(configuration.getClientDestination()
+            .getScheme()
+            .equals("https"))
         .setURI(buildRepoUri(request))
-        .setPort(configuration.getClientDestination().getPort())
-        .setHost(configuration.getClientDestination().getDomain());
+        .setPort(configuration.getClientDestination()
+            .getPort())
+        .setHost(configuration.getClientDestination()
+            .getDomain());
   }
 
   private String buildRepoUri(ClientRequest repoRequest) {
     StringBuilder uri = new StringBuilder(repoRequest.getPath());
     MultiMap params = repoRequest.getParams();
-    if (params != null && params.names() != null && !params.names().isEmpty()) {
+    if (params != null && params.names() != null && !params.names()
+        .isEmpty()) {
       uri.append("?")
-          .append(params.names().stream()
+          .append(params.names()
+              .stream()
               .map(name -> new StringBuilder(encode(name)).append("=")
                   .append(encode(params.get(name))))
               .collect(Collectors.joining("&"))
@@ -189,7 +196,9 @@ class HttpRepositoryConnector {
 
   private String encode(String value) {
     try {
-      return URLEncoder.encode(value, "UTF-8").replace("+", "%20").replace("%2F", "/");
+      return URLEncoder.encode(value, "UTF-8")
+          .replace("+", "%20")
+          .replace("%2F", "/");
     } catch (UnsupportedEncodingException ex) {
       LOGGER.fatal("Unexpected Exception - Unsupported encoding UTF-8", ex);
       throw new UnsupportedCharsetException("UTF-8");
@@ -201,8 +210,10 @@ class HttpRepositoryConnector {
 
     if (configuration.getCustomHttpHeader() != null) {
       result.set(
-          configuration.getCustomHttpHeader().getName(),
-          configuration.getCustomHttpHeader().getValue()
+          configuration.getCustomHttpHeader()
+              .getName(),
+          configuration.getCustomHttpHeader()
+              .getValue()
       );
     }
 
@@ -215,7 +226,8 @@ class HttpRepositoryConnector {
   }
 
   private MultiMap filteredHeaders(MultiMap headers) {
-    return headers.names().stream()
+    return headers.names()
+        .stream()
         .filter(AllowedHeadersFilter.create(configuration.getAllowedRequestHeadersPatterns()))
         .collect(MultiMapCollector.toMultiMap(o -> o, headers::getAll));
   }
