@@ -204,12 +204,6 @@ class HttpRepositoryConnector {
           configuration.getCustomHttpHeader().getValue()
       );
     }
-
-    //Override host header if provided in client destination
-    if (StringUtils.isNotBlank(hostHeader)) {
-      result.set(HttpHeaderNames.HOST.toString(), hostHeader);
-    }
-
     return result;
   }
 
