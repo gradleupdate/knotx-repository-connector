@@ -15,12 +15,19 @@
  */
 package io.knotx.repository.http;
 
-import io.knotx.server.api.context.ClientRequest;
-import io.knotx.server.api.context.RequestEvent;
-import io.knotx.server.api.handler.RequestEventHandlerResult;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.nio.charset.UnsupportedCharsetException;
+import java.util.stream.Collectors;
+
+import org.apache.commons.lang3.StringUtils;
+
 import io.knotx.commons.http.request.AllowedHeadersFilter;
 import io.knotx.commons.http.request.DataObjectsUtil;
 import io.knotx.commons.http.request.MultiMapCollector;
+import io.knotx.server.api.context.ClientRequest;
+import io.knotx.server.api.context.RequestEvent;
+import io.knotx.server.api.handler.RequestEventHandlerResult;
 import io.netty.handler.codec.http.HttpHeaderNames;
 import io.netty.handler.codec.http.HttpStatusClass;
 import io.reactivex.Single;
@@ -34,11 +41,6 @@ import io.vertx.reactivex.core.buffer.Buffer;
 import io.vertx.reactivex.ext.web.client.HttpRequest;
 import io.vertx.reactivex.ext.web.client.HttpResponse;
 import io.vertx.reactivex.ext.web.client.WebClient;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.nio.charset.UnsupportedCharsetException;
-import java.util.stream.Collectors;
-import org.apache.commons.lang3.StringUtils;
 
 class HttpRepositoryConnector {
 
@@ -149,9 +151,6 @@ class HttpRepositoryConnector {
       MultiMap requestHeaders) {
     HttpRequest<Buffer> request = webClient.request(HttpMethod.GET, httpRequestData);
     request.headers().addAll(requestHeaders);
-    if (requestHeaders.get(HttpHeaderNames.HOST.toString()) != null) {
-      request.host(requestHeaders.get(HttpHeaderNames.HOST.toString()));
-    }
     return request.rxSend();
   }
 
