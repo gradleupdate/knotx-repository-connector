@@ -1,3 +1,5 @@
+[![Build Status](https://dev.azure.com/knotx/Knotx/_apis/build/status/Knotx.knotx-repository-connector?branchName=master)](https://dev.azure.com/knotx/Knotx/_build/latest?definitionId=9&branchName=master)
+
 # Repository Connector
 Repository Connector is a [**Handler**](https://github.com/Knotx/knotx-server-http/tree/master/api#routing-handlers)
 that enables fetching the content to process during [HTTP Server request processing](https://github.com/Knotx/knotx-server-http#how-does-it-work) 
