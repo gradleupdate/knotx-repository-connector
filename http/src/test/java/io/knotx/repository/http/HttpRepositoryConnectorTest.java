@@ -35,6 +35,7 @@ import io.vertx.junit5.VertxExtension;
 import io.vertx.junit5.VertxTestContext;
 import io.vertx.reactivex.core.MultiMap;
 import io.vertx.reactivex.core.Vertx;
+import java.util.Arrays;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -214,4 +215,41 @@ class HttpRepositoryConnectorTest {
     );
   }
 
+    @Test
+    void process_whenMultipleParam_expectAllValuesArePassed(VertxTestContext testContext, Vertx vertx) {
+        //given
+        final String requestPath = "/test-template.html";
+        when(clientRequest.getPath()).thenReturn(requestPath);
+        when(clientRequest.getHeaders()).thenReturn(MultiMap.caseInsensitiveMultiMap());
+        when(clientRequest.getParams()).thenReturn(MultiMap.caseInsensitiveMultiMap()
+                .add("pets[]", Arrays.<String>asList("dog", "cat"))
+                .add("id", Arrays.<String>asList("someID")));
+
+        wireMockServer.stubFor(get(urlEqualTo(requestPath+"?pets%5B%5D=dog&pets%5B%5D=cat&id=someID"))
+                .willReturn(aResponse()
+                        .withHeader("Content-Type", "text/html")
+                        .withHeader("TestName", "Test Value")
+                        .withStatus(HttpResponseStatus.OK.code())));
+
+        //when
+        HttpRepositoryConnector connector = new HttpRepositoryConnector(vertx, httpRepositoryOptions);
+        Single<RequestEventHandlerResult> connectorResult = connector.process(requestEvent);
+
+        //then
+        RequestUtil.subscribeToResult_shouldSucceed(testContext, connectorResult,
+                result -> {
+                    assertEquals(HttpResponseStatus.OK.code(), result.getStatusCode().intValue());
+                    assertEquals("text/html", result.getHeaders().get("Content-Type"));
+                    assertEquals("Test Value", result.getHeaders().get("TestName"));
+                    assertTrue(result.getRequestEvent().isPresent());
+
+                    MultiMap params = result.getRequestEvent().get().getClientRequest().getParams();
+                    assertEquals(2, params.size());
+                    assertEquals(2, params.getAll("pets[]").size());
+                    assertEquals(1, params.getAll("id").size());
+
+                    this.wireMockServer.stop();
+                }
+        );
+    }
 }
