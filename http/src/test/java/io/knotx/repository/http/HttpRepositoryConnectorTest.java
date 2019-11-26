@@ -225,7 +225,7 @@ class HttpRepositoryConnectorTest {
                 .add("pets[]", Arrays.<String>asList("dog", "cat"))
                 .add("id", Arrays.<String>asList("someID")));
 
-        wireMockServer.stubFor(get(urlEqualTo(requestPath+"?pets%5B%5D=dog&pets%5B%5D=cat&id=someID"))
+        wireMockServer.stubFor(get(urlEqualTo(requestPath + "?pets%5B%5D=dog&pets%5B%5D=cat&id=someID"))
                 .willReturn(aResponse()
                         .withHeader("Content-Type", "text/html")
                         .withHeader("TestName", "Test Value")
