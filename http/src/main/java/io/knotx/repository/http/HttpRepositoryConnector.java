@@ -215,7 +215,7 @@ class HttpRepositoryConnector {
 
   private MultiMap filteredHeaders(MultiMap headers) {
     return headers.names().stream()
-        .filter(AllowedHeadersFilter.WildcardCaseInsensitive.create(configuration.getAllowedRequestHeaders()))
+        .filter(AllowedHeadersFilter.create(configuration.getAllowedRequestHeadersPatterns()))
         .collect(MultiMapCollector.toMultiMap(o -> o, headers::getAll));
   }
 
