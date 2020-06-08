@@ -160,7 +160,7 @@ class HttpRepositoryConnectorTest {
   }
 
   @Test
-  void process_whenRedirect_expectRedirectStatusAndEmptyBody(VertxTestContext testContext,
+  void process_whenRedirectAndFollowRedirect_expectOKStatusAndBody(VertxTestContext testContext,
       Vertx vertx) {
     //given
     final String requestPath = "/redirect.html";
@@ -169,7 +169,13 @@ class HttpRepositoryConnectorTest {
 
     wireMockServer.stubFor(get(urlEqualTo(requestPath))
         .willReturn(aResponse()
-            .withStatus(HttpResponseStatus.TEMPORARY_REDIRECT.code())));
+            .withStatus(HttpResponseStatus.MOVED_PERMANENTLY.code())
+            .withHeader("location", "/other.html")));
+
+    wireMockServer.stubFor(get(urlEqualTo("/other.html"))
+        .willReturn(aResponse()
+            .withStatus(HttpResponseStatus.OK.code())
+            .withBody("Response from other")));
 
     //when
     HttpRepositoryConnector connector = new HttpRepositoryConnector(vertx, httpRepositoryOptions);
@@ -179,7 +185,37 @@ class HttpRepositoryConnectorTest {
     RequestUtil.subscribeToResult_shouldSucceed(testContext, connectorResult,
         result -> {
           assertTrue(result.getRequestEvent().isPresent());
-          assertEquals(HttpResponseStatus.TEMPORARY_REDIRECT.code(),
+          assertEquals(HttpResponseStatus.OK.code(),
+              result.getStatusCode().intValue());
+          assertEquals("Response from other", result.getBody().toString());
+          this.wireMockServer.stop();
+        }
+    );
+  }
+
+  @Test
+  void process_whenRedirectAndNoFollowRedirect_expectRedirectAndNoBody(VertxTestContext testContext,
+      Vertx vertx) {
+    //given
+    final String requestPath = "/redirect.html";
+    when(clientRequest.getPath()).thenReturn(requestPath);
+    when(clientRequest.getHeaders()).thenReturn(MultiMap.caseInsensitiveMultiMap());
+
+    wireMockServer.stubFor(get(urlEqualTo(requestPath))
+        .willReturn(aResponse()
+            .withStatus(HttpResponseStatus.MOVED_PERMANENTLY.code())
+            .withHeader("location", "/other.html")));
+    httpRepositoryOptions.getClientOptions().setFollowRedirects(false);
+
+    //when
+    HttpRepositoryConnector connector = new HttpRepositoryConnector(vertx, httpRepositoryOptions);
+    Single<RequestEventHandlerResult> connectorResult = connector.process(requestEvent);
+
+    //then
+    RequestUtil.subscribeToResult_shouldSucceed(testContext, connectorResult,
+        result -> {
+          assertTrue(result.getRequestEvent().isPresent());
+          assertEquals(HttpResponseStatus.MOVED_PERMANENTLY.code(),
               result.getStatusCode().intValue());
           assertTrue(result.getBody().toString().isEmpty());
           this.wireMockServer.stop();
