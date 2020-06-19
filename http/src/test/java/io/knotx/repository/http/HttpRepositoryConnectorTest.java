@@ -25,6 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.mockito.Mockito.when;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
+import com.google.common.collect.Sets;
 import io.knotx.junit5.util.RequestUtil;
 import io.knotx.server.api.context.ClientRequest;
 import io.knotx.server.api.context.RequestEvent;
@@ -160,7 +161,7 @@ class HttpRepositoryConnectorTest {
   }
 
   @Test
-  void process_whenRedirectAndFollowRedirect_expectOKStatusAndBody(VertxTestContext testContext,
+  void process_whenRedirectAndFollowRedirect_expectOKStatusAndBodyAndHeadersProperlyPassed(VertxTestContext testContext,
       Vertx vertx) {
     //given
     final String requestPath = "/redirect.html";
@@ -177,6 +178,9 @@ class HttpRepositoryConnectorTest {
             .withStatus(HttpResponseStatus.OK.code())
             .withBody("Response from other")));
 
+    clientRequest.getHeaders().add("Host", "www.example.com").add("Test", "123");
+    httpRepositoryOptions.setAllowedRequestHeaders(Sets.newHashSet("Host", "Test"));
+
     //when
     HttpRepositoryConnector connector = new HttpRepositoryConnector(vertx, httpRepositoryOptions);
     Single<RequestEventHandlerResult> connectorResult = connector.process(requestEvent);
@@ -188,6 +192,10 @@ class HttpRepositoryConnectorTest {
           assertEquals(HttpResponseStatus.OK.code(),
               result.getStatusCode().intValue());
           assertEquals("Response from other", result.getBody().toString());
+          wireMockServer.getAllServeEvents().forEach(serveEvent -> {
+            assertEquals("www.example.com", serveEvent.getRequest().getHeader("Host"));
+            assertEquals("123", serveEvent.getRequest().getHeader("Test"));
+          });
           this.wireMockServer.stop();
         }
     );
