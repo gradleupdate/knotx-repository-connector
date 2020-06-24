@@ -175,12 +175,10 @@ class HttpRepositoryConnector {
     StringBuilder uri = new StringBuilder(repoRequest.getPath());
     MultiMap params = repoRequest.getParams();
     if (params != null && params.names() != null && !params.names().isEmpty()) {
-      uri.append("?")
-          .append(params.names().stream()
-              .map(name -> new StringBuilder(encode(name)).append("=")
-                  .append(encode(params.get(name))))
-              .collect(Collectors.joining("&"))
-          );
+      uri.append("?").append(
+          params.entries().stream()
+              .map(entry -> encode(entry.getKey()) + "=" + encode(entry.getValue()))
+              .collect(Collectors.joining("&")));
     }
 
     return uri.toString();
