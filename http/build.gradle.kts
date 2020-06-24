@@ -18,14 +18,15 @@ import org.nosphere.apache.rat.RatTask
 
 plugins {
   id("io.knotx.java-library")
-  id("io.knotx.maven-publish")
-  id("io.knotx.unit-test")
   id("io.knotx.codegen")
+  id("io.knotx.unit-test")
   id("io.knotx.jacoco")
-  id("org.nosphere.apache.rat") version "0.6.0"
+  id("io.knotx.maven-publish")
+  id("org.nosphere.apache.rat")
 }
 
 dependencies {
+  annotationProcessor(platform("io.knotx:knotx-dependencies:${project.version}"))
   implementation(platform("io.knotx:knotx-dependencies:${project.version}"))
   api("io.knotx:knotx-server-http-api:${project.version}")
 
@@ -40,6 +41,7 @@ dependencies {
   implementation(group = "org.apache.commons", name = "commons-lang3")
   implementation(group = "org.apache.commons", name = "commons-collections4")
 
+  testImplementation("io.knotx:knotx-junit5:${project.version}")
   testImplementation(group = "org.mockito", name = "mockito-core")
   testImplementation(group = "org.mockito", name = "mockito-junit-jupiter")
   testImplementation(group = "com.github.tomakehurst", name = "wiremock")

@@ -16,16 +16,15 @@
 
 plugins {
     java
-    id("io.knotx.publish-all-composite") version "0.1.4"
+    id("io.knotx.release-java")
+    id("io.knotx.publish-all-composite")
 }
 
 subprojects {
     group = "io.knotx"
     repositories {
-        jcenter()
         mavenLocal()
-        maven { url = uri("https://plugins.gradle.org/m2/") }
-        maven { url = uri("https://oss.sonatype.org/content/groups/staging/") }
-        maven { url = uri("https://oss.sonatype.org/content/repositories/snapshots") }
+        jcenter()
+        gradlePluginPortal()
     }
 }
